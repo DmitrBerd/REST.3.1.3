@@ -2,6 +2,7 @@ package com.example.kata.springboot.dao;
 
 import com.example.kata.springboot.model.User;
 import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -39,7 +40,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getUserByName(String name) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.firstname=:name",
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.firstName=:name",
+                User.class).setParameter("name", name);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public User getUserByEmail(String name) {
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.email=:name",
                 User.class).setParameter("name", name);
         return query.getSingleResult();
     }

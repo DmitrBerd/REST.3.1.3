@@ -2,12 +2,14 @@ package com.example.kata.springboot.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users1")
 public class User implements UserDetails {
 
     @Id
@@ -15,7 +17,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "firstname")
-    private String firstname;
+    private String firstName;
 
     @Column(name = "lastname")
     private String lastName;
@@ -26,8 +28,11 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "age")
+    private int age;
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "users_roles1", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
@@ -35,13 +40,22 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password, Set<Role> roles) {
+    public User(Long id, String firstname, String lastName, String email, String password, int age, Set<Role> roles) {
         this.id = id;
-        this.firstname = firstName;
+        this.firstName = firstname;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.age = age;
         this.roles = roles;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public Long getId() {
@@ -52,12 +66,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstName) {
-        this.firstname = firstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -100,7 +114,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return firstname;
+        return firstName;
     }
 
     @Override
@@ -122,15 +136,24 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    public  String getStringRoles(){
+        StringBuilder r = new StringBuilder();
+        Iterator<Role> iterator = roles.iterator();
+        while (iterator.hasNext()){
+            r.append(iterator.next().getName()).append("  ");
+        }
+        return r.toString();
+    }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", firstName='" + firstname + '\'' +
+                ", firstname='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", age=" + age +
                 ", roles=" + roles +
                 '}';
     }

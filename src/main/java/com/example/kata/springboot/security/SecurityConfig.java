@@ -32,11 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // http.csrf().disable(); - попробуйте выяснить сами, что это даёт
         http.authorizeRequests()
                 .antMatchers("/", "/login", "/logout").permitAll() // доступность всем
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER')") // разрешаем входить на /user пользователям с ролью user
-                .antMatchers("/admin").access("hasAnyRole('ROLE_ADMIN')") // разрешаем входить на /user пользователям с ролью admin
-                .and().formLogin()  // Spring сам подставит свою логин форму
+                .antMatchers("/user/**").access("hasAnyAuthority('USER', 'ADMIN')")// разрешаем входить на /user пользователям с ролью user
+                .antMatchers("/admin/**").access("hasAnyAuthority('ADMIN')")// разрешаем входить на /admin пользователям с ролью admin
+                .and()
+                .formLogin()  // Spring сам подставит свою логин форму
+                .loginPage("/login")
+                .usernameParameter("email")
                 .successHandler(successUserHandler) // подключаем наш SuccessHandler для перенеправления по ролям
-                .and().logout()
+                .and()
+                .logout()
                 .logoutUrl("/logout") //URL-адрес, запускающий выход из системы (по умолчанию "/ logout").
                 .logoutSuccessUrl("/login") //URL-адрес для перенаправления после выхода из системы.
                 .and().csrf().disable();

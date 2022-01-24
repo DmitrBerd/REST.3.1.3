@@ -45,33 +45,4 @@ public class UserController {
         model.addAttribute("roles", user.getRoles());
         return "user";
     }
-
-    @PostMapping("/admin/add")
-    public String addUser(@ModelAttribute User user, @RequestParam(value = "checkBoxRoles") String[] checkBoxRoles) {
-        Set<Role> roleSet = new HashSet<Role>();
-        for (String role : checkBoxRoles) {
-            roleSet.add(roleService.getRole(role));
-        }
-        user.setRoles(roleSet);
-        userService.add(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping("/admin/editUser")
-    public String editUser(@ModelAttribute User user, @RequestParam(value = "checkBoxRoles") String[] checkBoxRoles) {
-        Set<Role> roleSet = new HashSet<Role>();
-        for (String role : checkBoxRoles) {
-            roleSet.add(roleService.getRole(role));
-        }
-        user.setRoles(roleSet);
-        userService.edit(user);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/admin/remove/{id}")
-    public String removeUser(@PathVariable("id") long id) {
-        userService.remove(id);
-        return "redirect:/admin";
-    }
-
 }

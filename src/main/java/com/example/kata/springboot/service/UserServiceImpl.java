@@ -1,52 +1,53 @@
 package com.example.kata.springboot.service;
 
-import com.example.kata.springboot.dao.UserDao;
+import com.example.kata.springboot.repository.UserRepository;
 import com.example.kata.springboot.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
-
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public void add(User user) {
-        userDao.add(user);
+        userRepository.save(user);
     }
 
     @Override
     public void remove(long id) {
-        userDao.remove(id);
+        userRepository.deleteById(id);
     }
 
     @Override
     public void edit(User user) {
-        userDao.edit(user);
+        userRepository.save(user);
     }
 
     @Override
     public User getById(long id) {
-        return userDao.getById(id);
+        return userRepository.getById(id);
     }
 
     @Override
-    public User getUserByEmail(String name) {
-        return userDao.getUserByEmail(name);
+    public User getUserByEmail(String email) {
+
+        return userRepository.getUserByEmail(email);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
     }
 
     @Override
     public List<User> allUser() {
-        return userDao.allUser();
+        return userRepository.findAll();
     }
 }

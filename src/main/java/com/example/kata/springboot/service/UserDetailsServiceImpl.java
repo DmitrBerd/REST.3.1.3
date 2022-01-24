@@ -1,16 +1,18 @@
 package com.example.kata.springboot.service;
 
-import com.example.kata.springboot.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserDao userDao;
+    private final UserService userService;
 
-    public UserDetailsServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    @Autowired
+    public UserDetailsServiceImpl(UserService userService) {
+        this.userService = userService;
     }
 
     // «Пользователь» – это просто Object. В большинстве случаев он может быть
@@ -18,6 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // Для создания UserDetails используется интерфейс UserDetailsService, с единственным методом:
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        return userDao.getUserByEmail(userEmail);
+        return userService.getUserByEmail(userEmail);
     }
 }

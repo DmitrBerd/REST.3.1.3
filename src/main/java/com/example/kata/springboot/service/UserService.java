@@ -12,8 +12,7 @@ public interface UserService {
     void edit(User user);
 
     User getById(long id);
-
-    User getUserByEmail(String name);
-
+    User getUserByUsername(String firstName);
+    User getUserByEmail(String email);
     List<User> allUser();
 }

@@ -1,5 +1,6 @@
 package com.example.kata.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,8 +9,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "users1")
+@Table(name = "usersRest")
 public class User implements UserDetails {
 
     @Id
@@ -17,7 +19,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "firstname")
-    private String firstName;
+    private String username;
 
     @Column(name = "lastname")
     private String lastName;
@@ -32,17 +34,14 @@ public class User implements UserDetails {
     private int age;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles1", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
 
     public User() {
     }
 
-    public User(Long id, String firstname, String lastName, String email, String password, int age, Set<Role> roles) {
-        this.id = id;
-        this.firstName = firstname;
+    public User(String firstname, String lastName, String email, String password, int age, Set<Role> roles) {
+        this.username = firstname;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
@@ -66,12 +65,12 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUsername(String username) {
+        return username;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUsername(String firstName) {
+        this.username = firstName;
     }
 
     public String getLastName() {
@@ -114,7 +113,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return firstName;
+        return username;
     }
 
     @Override
@@ -136,10 +135,11 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    public  String getStringRoles(){
+
+    public String getToStringRole() {
         StringBuilder r = new StringBuilder();
         Iterator<Role> iterator = roles.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             r.append(iterator.next().getName()).append("  ");
         }
         return r.toString();
@@ -149,7 +149,7 @@ public class User implements UserDetails {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", firstname='" + firstName + '\'' +
+                ", firstname='" + username + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

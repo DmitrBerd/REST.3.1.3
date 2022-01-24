@@ -1,30 +1,32 @@
 package com.example.kata.springboot.service;
 
-import com.example.kata.springboot.dao.RoleDao;
+import com.example.kata.springboot.repository.RoleRepository;
 import com.example.kata.springboot.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class RoleServiceImpl implements RoleService {
-    private RoleDao roleDao;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public List<Role> getAllRoles() {
-        return roleDao.getAllRoles();
+        return roleRepository.findAll();
     }
 
     @Override
     public Role getRole(String role) {
-        return roleDao.getRole(role);
+        return roleRepository.getRoleByName(role);
+    }
+
+    @Override
+    public void addRole(Role role) {
+        roleRepository.save(role);
     }
 }
